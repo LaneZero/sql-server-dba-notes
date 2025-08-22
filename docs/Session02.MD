@@ -22,8 +22,8 @@
   <li><p dir="rtl"><strong>نکته کلیدی و بهترین شیوه:</strong> هرگز سرور رو دوباره ریست نکنید! حداقل ۵-۱۰ دقیقه (یا بیشتر بسته به اندازه log) صبر کنید تا خودش کامل بشه. اگر طولانی شد، از Error Log چک کنید و اگر لازم باشه، restore کنید.</p></li>
   <li><p dir="rtl"><strong>نکته اضافی:</strong> برای جلوگیری، همیشه از recovery model مناسب (مثل Full برای HA) استفاده کنید و log backup منظم بگیرید.</p></li>
   <li><p dir="rtl"><strong>دلیل Recovery Pending:</strong> یکی از فایل‌ها (مثل MDF, NDF یا LDF) مشکل داره، مثلاً آسیب‌دیده، گم‌شده یا دسترسی نداره (مثل مجوز فایل).</p></li>
-  <li><p dir="rtl"><strong>راه‌حل عملی:</strong> فایل‌ها رو چک کنید و سعی کنید آنلاین کنید: <code>ALTER DATABASE [DBName] SET ONLINE;</code>. اگر نشد، restore از بک‌آپ.</p></li>
-  <li><p dir="rtl"><strong>مثال:</strong> برای چک log: <code>DBCC OPENTRAN([DBName]);</code> تا تراکنش‌های باز رو ببینید.</p></li>
+  <li><p dir="rtl"><strong>راه‌حل عملی:</strong> فایل‌ها رو چک کنید و سعی کنید آنلاین کنید: <pre dir="ltr"><code>ALTER DATABASE [DBName] SET ONLINE;</code></pre> اگر نشد، restore از بک‌آپ.</p></li>
+  <li><p dir="rtl"><strong>مثال:</strong> برای چک log: <pre dir="ltr"><code>DBCC OPENTRAN([DBName]);</code></pre> تا تراکنش‌های باز رو ببینید.</p></li>
   <li><p dir="rtl"><strong>منبع:</strong> <a href="https://learn.microsoft.com/en-us/sql/relational-databases/databases/database-states?view=sql-server-ver16">Microsoft Docs - Database States</a>.</p></li>
 </ul>
 
@@ -38,7 +38,7 @@
 
 <ul dir="rtl">
   <li><strong>چطور ببینیم SQL Server چقدر RAM داره و مصرف می‌کنه؟</strong></li>
-  <li><p dir="rtl">از query جامع: <code>SELECT physical_memory_in_use_kb / 1024 AS RAM_Used_MB, total_physical_memory_kb / 1024 AS Total_RAM_MB FROM sys.dm_os_process_memory;</code>. این لحظه‌ای نشون می‌ده.</p></li>
+  <li><p dir="rtl">از query جامع: <pre dir="ltr"><code>SELECT physical_memory_in_use_kb / 1024 AS RAM_Used_MB, total_physical_memory_kb / 1024 AS Total_RAM_MB FROM sys.dm_os_process_memory;</code></pre> این لحظه‌ای نشون می‌ده.</p></li>
 </ul>
 
 <ul dir="rtl">
@@ -51,7 +51,7 @@
 
 <ul dir="rtl">
   <li><strong>چطور مصرف RAM رو چک کنیم؟</strong></li>
-  <li><p dir="rtl">Query اصلی: <code>SELECT * FROM sys.dm_os_sys_info;</code> (خروجی: cpu_count برای هسته‌ها، physical_memory_kb برای کل رم، committed_kb برای مصرف فعلی، committed_target_kb برای مقدار مطلوب، sqlserver_start_time برای زمان استارت).</p></li>
+  <li><p dir="rtl">Query اصلی: <pre dir="ltr"><code>SELECT * FROM sys.dm_os_sys_info;</code></pre> (خروجی: cpu_count برای هسته‌ها، physical_memory_kb برای کل رم، committed_kb برای مصرف فعلی، committed_target_kb برای مقدار مطلوب، sqlserver_start_time برای زمان استارت).</p></li>
   <li><p dir="rtl"><strong>روش‌های جایگزین:</strong> Properties از tempdb (Date Created نشان‌دهنده ریستارته، چون tempdb هر بار بازسازی می‌شه) یا از Error Log فعلی.</p></li>
   <li><p dir="rtl"><strong>نکته کلیدی:</strong> اگر committed_kb نزدیک به Max Memory باشه، رم رو افزایش بدید. همه DMVها (dynamic management views با پیشوند dm_) لحظه‌ای هستن و برای مانیتورینگ realtime عالی‌ان.</p></li>
   <li><p dir="rtl"><strong>منبع:</strong> <a href="https://learn.microsoft.com/en-us/sql/database-engine/configure-windows/server-memory-server-configuration-options?view=sql-server-ver16">Microsoft Docs - Server Memory Configuration</a>.</p></li>
@@ -71,7 +71,7 @@
   <li><p dir="rtl">Counter: SQL Server: Buffer Manager (برای default instance؛ اگر named، نام instance اضافه می‌شه).</p></li>
   <li><p dir="rtl"><strong>Buffer Cache Hit Ratio:</strong> درصد صفحاتی که از RAM خونده شدن (نه دیسک). اگر زیر ۹۰% بره، رم کمه – یعنی SQL زیاد از دیسک می‌خونه.</p></li>
   <li><p dir="rtl"><strong>نکته اضافی:</strong> از counterهای دیگه مثل Page Life Expectancy (اگر زیر ۳۰۰ ثانیه باشه، رم کمه) استفاده کنید.</p></li>
-  <li><p dir="rtl">برای خالی کردن RAM (فقط برای تست): <code>DBCC DROPCLEANBUFFERS;</code> (clean pages رو پاک می‌کنه؛ dirty pages منتظر checkpoint می‌مونن تا به دیسک برن). هرگز روی سرور تولید نزنید – مثل ریستارت عمل می‌کنه و بار اضافه می‌آره!</p></li>
+  <li><p dir="rtl">برای خالی کردن RAM (فقط برای تست): <pre dir="ltr"><code>DBCC DROPCLEANBUFFERS;</code></pre> (clean pages رو پاک می‌کنه؛ dirty pages منتظر checkpoint می‌مونن تا به دیسک برن). هرگز روی سرور تولید نزنید – مثل ریستارت عمل می‌کنه و بار اضافه می‌آره!</p></li>
   <li><p dir="rtl"><strong>Clean vs Dirty Pages:</strong> Clean = داده‌های بدون تغییر؛ Dirty = تغییرکرده (مثل پس از UPDATE) که با checkpoint ذخیره می‌شن.</p></li>
   <li><p dir="rtl"><strong>مثال:</strong> کوئری با RAM خالی = Cold Cache (برای تست بدترین سناریو). بعد، warm cache رو چک کنید تا تفاوت عملکرد رو ببینید.</p></li>
   <li><p dir="rtl"><strong>نکته بهترین شیوه:</strong> ریستارت سرور مسکن موقتیه – مشکلات ریشه‌ای مثل پر شدن tempdb یا lockها رو حل کنید. از ابزارهایی مثل Query Store برای tuning طولانی‌مدت استفاده کنید.</p></li>
@@ -106,11 +106,11 @@
 
 <ul dir="rtl">
   <li><strong>بررسی Dormant Connections:</strong></li>
-  <li><p dir="rtl">Query: <code>SELECT * FROM sys.dm_exec_sessions WHERE is_user_process = 1 ORDER BY last_request_end_time DESC;</code> (سشن‌های کاربر؛ ID < ۵۰ سیستمیه). Status='Sleeping' یعنی بیکاره و آخرین درخواست رو نشون می‌ده.</p></li>
+  <li><p dir="rtl">Query: <pre dir="ltr"><code>SELECT * FROM sys.dm_exec_sessions WHERE is_user_process = 1 ORDER BY last_request_end_time DESC;</code></pre> (سشن‌های کاربر؛ ID < ۵۰ سیستمیه). Status='Sleeping' یعنی بیکاره و آخرین درخواست رو نشون می‌ده.</p></li>
   <li><p dir="rtl"><strong>نکته کلیدی:</strong> همیشه کانکشن‌ها رو بعد استفاده close کنید (dispose فقط object رو پاک می‌کنه، نه اتصال). اگر سشن‌ها > max threads بشن، سرور جدیدها رو رد می‌کنه و مثل هنگ عمل می‌کنه.</p></li>
   <li><p dir="rtl"><strong>نکته اضافی:</strong> از connection pooling در اپ‌ها استفاده کنید تا باز/بستن مکرر نداشته باشید.</p></li>
   <li><p dir="rtl">جاب برای kill سشن‌های قدیمی (بیش از ۶۰ دقیقه بیکار):</p></li>
-  <li><pre><code>DECLARE @SQL nvarchar(4000) = N'';
+  <li><pre dir="ltr"><code>DECLARE @SQL nvarchar(4000) = N'';
 SELECT @SQL = CONCAT(@SQL, 'KILL ', session_id, '; ') 
 FROM sys.dm_exec_sessions 
 WHERE is_user_process = 1 AND DATEDIFF(minute, last_request_start_time, GETDATE()) > 60 
@@ -165,7 +165,7 @@ EXEC (@SQL);</code></pre></li>
 
 <ul dir="rtl">
   <li><strong>مدیریت Lock:</strong></li>
-  <li><p dir="rtl">تراکنش طولانی رکوردها رو Exclusive Lock (EX) می‌کنه. برای خواندن بدون بلاک: <code>SELECT * FROM Table WITH (NOLOCK);</code> (اما dirty read ممکنه و write همچنان بلاک می‌شه).</p></li>
+  <li><p dir="rtl">تراکنش طولانی رکوردها رو Exclusive Lock (EX) می‌کنه. برای خواندن بدون بلاک: <pre dir="ltr"><code>SELECT * FROM Table WITH (NOLOCK);</code></pre> (اما dirty read ممکنه و write همچنان بلاک می‌شه).</p></li>
   <li><p dir="rtl"><strong>بهترین شیوه:</strong> سشن لاک‌کننده رو پیدا و kill کنید (با sys.dm_tran_locks)، نه ریست سرور! برای جلوگیری از deadlock، ایندکس مناسب بسازید.</p></li>
   <li><p dir="rtl"><strong>نکته اضافی:</strong> از isolation levels مثل READ COMMITTED SNAPSHOT برای کم کردن lock استفاده کنید.</p></li>
   <li><p dir="rtl"><strong>Plan Cache:</strong> بعد ریست خالی می‌شه – SQL پلن‌ها رو کش می‌کنه تا کامپایل دوباره نکنه. ریستارت بار اضافه می‌آره (مثل بازخوانی داده‌ها به RAM).</p></li>
@@ -246,7 +246,7 @@ EXEC (@SQL);</code></pre></li>
   <li><p dir="rtl">اگر سؤالی داری، در issues ریپو بنویس یا از Microsoft Docs/فروم‌ها کمک بگیر.</p></li>
 </ul>
 
-<p dir="rtl"><strong>گیت‌هاب خانه ماست!</strong> این جزوه رو فورک کن، pull request بفرست برای بهبود، یا لینک پروژه‌های دیگه‌ات (مثل افزونه فایرفاکس از خاطرات قبلی‌مون 😊) اضافه کن. نگارش رو کامل‌تر کردم – اگر نیاز به تغییر داری، بگو! <span style="color: #007bff;">⭐🚀</span></p>
+<p dir="rtl"><strong>گیت‌هاب خانه ماست!</strong> این جزوه رو فورک کن، pull request بفرست برای بهبود، یا لینک پروژه‌های دیگه‌ات اضافه کن. نگارش رو کامل‌تر کردم – اگر نیاز به تغییر داری، بگو! <span style="color: #007bff;">⭐🚀</span></p>
 
 [بازگشت به صفحه اصلی: [README](../README.md)]
 
